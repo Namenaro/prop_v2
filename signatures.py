@@ -43,7 +43,7 @@ class AndSignature: # коннектор 2 программ действием d
             abs_actions_set.append(Point(x=absx, y=absy))
         return abs_actions_set
 
-    def run(self, pre_left_exemplar, pre_right_exemplar):
+    def run_one_ex(self, pre_left_exemplar, pre_right_exemplar):
         print(self.__dict__)
         print ("pre_left=" + str(pre_left_exemplar.__dict__))
         print("pre_right=" + str(pre_right_exemplar.__dict__))
@@ -104,3 +104,14 @@ class AndSignature: # коннектор 2 программ действием d
             if old_eid == self.pre_eid_right:
                 return new_eid
         assert "Err: no right eid found in and_signa"
+
+    def run(self, left_pre_exemplars, right_pre_exemplars):
+        new_exemplars = []
+        for pre_left in left_pre_exemplars:
+            for pre_right in right_pre_exemplars:
+                new_exemplar = self.run_one_ex(pre_left, pre_right)
+                if new_exemplar is not None:
+                    new_exemplars.append(new_exemplar)
+        if len(new_exemplars)==0:
+            return None
+        return new_exemplars
