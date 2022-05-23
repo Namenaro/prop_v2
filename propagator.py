@@ -219,7 +219,7 @@ class OrRwHub(Hub):
         Hub.__init__(signa, parent, condition, SUPER_ID)
         self.map = signa.alternatives_list[alternative_num] #  {eid1: eid1v1, eid2:eid2v1,...}
         self.child = None
-        self.child_SUPER_ID = GLOBAL.hub_id_gen.get_id()
+
 
         self.input_exs_obj = None
 
@@ -240,7 +240,7 @@ class OrRwHub(Hub):
         # передаем это условие ребенку
         old_eid= self.map(self.condition.eid)
         condition_for_child = Condition(old_eid, points=deepcopy(self.condition.points))
-        self.child = _create_hub(parent=self, SUPER_ID=self.child_SUPER_ID, condition=condition_for_child)
+        self.child = _create_hub(parent=self, SUPER_ID=None, condition=condition_for_child)
         return self.child
 
     def _propagate_exemplars(self):
