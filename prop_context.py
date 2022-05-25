@@ -25,17 +25,25 @@ class Context:
             self.id += 1
         return self.id
 
-    def create_hub(self, parent, SUPER_ID, condition):
+    def create_hub_by_condition(self, parent, SUPER_ID, condition):
         signa = self.ltm.get_program_signature_by_eid(eid=condition.eid)
         ID = self.get_id()
         if type(signa) == ISignature:
-            new_hub = IHub(signa, parent, condition, ID, SUPER_ID=SUPER_ID)
+            new_hub = IHub(signa, parent,
+                           condition, ID,
+                           SUPER_ID=SUPER_ID)
         else:
             if type(signa) == AndSignature:
-                new_hub = IHub(signa, parent, condition, ID, SUPER_ID=SUPER_ID)
+                new_hub = AndHub(signa, parent,
+                                 condition, ID,
+                                 SUPER_ID=SUPER_ID,
+                                 LEFT_SUPER_ID=self.get_id(),
+                                 RIGHT_SUPER_ID=self.get_id())
             else:
                 if type(signa) == ORSignature:
-                    or_rw_hubs = self._create_or_rw_hubs(signa, parent, condition, SUPER_ID=SUPER_ID)
+                    or_rw_hubs = self._create_or_rw_hubs(signa, parent,
+                                                         condition, ID,
+                                                         SUPER_ID=SUPER_ID)
                     new_hub = or_rw_hubs.pop()
                     self.add_buds(or_rw_hubs)
         return new_hub
@@ -43,6 +51,7 @@ class Context:
     def _create_or_rw_hubs(self, signa, parent, condition, SUPER_ID):
         or_rw_hubs = []
         for i in range(len(signa.alternatives_list)):
-            new_or_rw_hub = OrRwHub(i, signa, parent, condition, SUPER_ID)
+            ID = self.get_id()
+            new_or_rw_hub = OrRwHub(i, signa, parent, condition, ID, SUPER_ID)
             or_rw_hubs.append(new_or_rw_hub)
         return or_rw_hubs

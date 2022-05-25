@@ -20,10 +20,10 @@ class HubRunner:
 
 class RootHubRunner:
     def run(self, hub, context):
-        hub.child = context.create_hub(parent=hub,
-                                       ID=context.get_id(),
-                                       SUPER_ID=context.get_id(),
-                                       condition=hub.condition)
+        hub.child = context.create_hub_by_condition(parent=hub,
+                                                    ID=context.get_id(),
+                                                    SUPER_ID=context.get_id(),
+                                                    condition=hub.condition)
         return hub.child
 
 class IHubRunner:
@@ -35,9 +35,32 @@ class IHubRunner:
         hub.parent.set_input_exemplars(exemplars=exemplars, sender=hub)
         return hub.parent
 
+
 class AndHubRunner:
     def run(self, hub, context):
-        pass
+        # 1) В узел заходит условие
+        if self.input_exs_obj is None:
+            next_hub = self._propagate_condition(hub, context)
+            return next_hub
+        # 2) в узел пришли экземпляры от ребенка
+        next_hub = self._propagate_exemplars(hub, context)
+        return next_hub
+
+    def _propagate_condition(self, hub, context):
+        assert hub.child_left is None and hub.child_right is None, "prop err: child of and-hub must not exist! but exists"
+        # смотрим, какого ребенка надо создать, создаем его и передаем ему управление
+        if hub.condition.eid in hub.signa.map1.keys():  # надо левого
+            hub.main_conditioning_child_is_left = True
+            hub.child_left = context.create_hub_by_condition(parent=hub,
+                                                             SUPER_ID=self.child_left_SUPER_ID,
+                                                             condition=hub.condition)
+            return self.child_left
+        # надо правого
+        self.main_conditioning_child_is_left = False
+        self.child_right = _create_hub(parent=self, SUPER_ID=self.child_right_SUPER_ID, condition=self.condition)
+        return self.child_right
+
+
 
 class OrHubRunner:
     def run(self, hub, context):
