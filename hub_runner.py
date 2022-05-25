@@ -48,6 +48,7 @@ class AndHubRunner:
             next_hub = self._propagate_condition(hub, context)
             return next_hub
         # 2) в узел пришли экземпляры от ребенка
+        assert hub.child_right is not None or hub.child_left is not None, "prop err: unexpected exemplars"
         next_hub = self._propagate_exemplars(hub, context)
         return next_hub
 
@@ -93,6 +94,7 @@ class AndHubRunner:
         if hub.input_exs_obj.sender.ID == hub.child_right.ID:
             hub.child_right_exemplars = deepcopy(hub.input_exs_obj.exemplars)
             if hub.child_left_exemplars is not None:  # все есть для попытки запуска себя!
+                print ("TRY RUN and-hub")
                 assert hub.main_conditioning_child_is_left is True, "prop err: main child must be left"
                 exemplars = hub.signa.run(left_pre_exemplars=hub.child_left_exemplars,
                                            right_pre_exemplars=hub.child_right_exemplars)
@@ -163,8 +165,7 @@ class AndHubRunner:
     def _create_left_child_by_right_exemplars(self, hub, context):
         right_points = extract_cloud_from_exemplars_list_by_eid(hub.signa.pre_eid_right, hub.child_right_exemplars)
         left_points = hub.signa.get_left_cloud_by_right_cloud(right_points)
-        new_left_eid = hub.signa.get_new_eid_left()
-        condition = Condition(new_left_eid, list(left_points))
+        condition = Condition(hub.signa.pre_eid_left, list(left_points))
         child = context.create_hub_by_condition(parent=hub,
                                    SUPER_ID=hub.child_left_SUPER_ID,
                                    condition=condition)
@@ -173,8 +174,7 @@ class AndHubRunner:
     def _create_right_child_by_left_exemplars(self, hub, context):
         left_points = extract_cloud_from_exemplars_list_by_eid(hub.signa.pre_eid_left, hub.child_left_exemplars)
         right_points = hub.signa.get_right_cloud_by_left_cloud(left_points)
-        new_right_eid = hub.signa.get_new_eid_right()
-        condition = Condition(new_right_eid, list(right_points))
+        condition = Condition(hub.signa.pre_eid_right, list(right_points))
         child = context.create_hub_by_condition(parent=hub,
                                    SUPER_ID=hub.child_right_SUPER_ID,
                                    condition=condition)
