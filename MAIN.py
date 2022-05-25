@@ -1,6 +1,6 @@
 from utils.get_pictures import *
 from utils.point import Point
-from propagator import make_propagation
+from prop import get_exemplars_by_condition
 import matplotlib.pyplot as plt
 
 
@@ -24,7 +24,7 @@ def exp():
     #show_hardcoded_examples()
     #points = [Point(13, 15), Point(14, 15)] # for eid=6
     points = [Point(14, 22), Point(13, 22)]
-    exemplars = make_propagation(eid=19, points=points)
+    exemplars = get_exemplars_by_condition(eid=19, points=points)
     print("Result exemplars are " + str(exemplars))
 
 exp()

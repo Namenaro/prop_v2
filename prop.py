@@ -2,10 +2,10 @@ from prop_context import Context
 from hub_runner import HubRunner
 from hub import *
 
-def get_exemplars_by_condition(condition):
+def get_exemplars_by_condition(eid, points):
     context = Context()
     runner = HubRunner()
-    root_hub = RootHub(condition)
+    root_hub = RootHub(Condition(eid, points))
     current_hub = root_hub
 
     while True:

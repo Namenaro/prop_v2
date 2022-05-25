@@ -2,7 +2,6 @@ from prog_exemplar import ProgExemplar
 from signatures import *
 from prop_utils import *
 
-from copy import deepcopy
 
 class Condition:
     def __init__(self, eid, points):
