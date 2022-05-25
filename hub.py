@@ -56,3 +56,15 @@ class AndHub(Hub):
 
     def set_input_exemplars(self, sender, exemplars):
         self.input_exs_obj = InputExemplars(sender, exemplars)
+
+
+class OrRwHub(Hub):
+    def __init__(self, alternative_num,  signa, parent, condition, SUPER_ID):
+        Hub.__init__(signa, parent, condition, SUPER_ID)
+        self.map = signa.alternatives_list[alternative_num] #  {eid1: eid1v1, eid2:eid2v1,...}
+        self.child = None
+
+        self.input_exs_obj = None
+
+    def set_input_exemplars(self, sender, exemplars):
+        self.input_exs_obj = InputExemplars(sender, exemplars)

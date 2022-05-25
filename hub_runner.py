@@ -165,9 +165,34 @@ class AndHubRunner:
         return child
 
 
-
-
 class OrRwHubRunner:
     def run(self, hub, context):
-        pass
+        # разные варианты прохождения активности по узлу:
+        # 1) В узел заходит активирующее его условие
+        if hub.input_exs_obj is None:
+            next_hub = self._propagate_condition(hub, context)
+            return next_hub
+        # 2) в узел пришли экземпляры от ребенка
+        next_hub = self._propagate_exemplars(hub, context)
+        return next_hub
+
+    def _propagate_condition(self, hub, context):
+        # передаем это условие ребенку
+        old_eid= hub.map(hub.condition.eid)
+        condition_for_child = Condition(old_eid, points=deepcopy(hub.condition.points))
+        hub.child = context.create_hub(parent=hub, SUPER_ID=None,
+                                        condition=condition_for_child)
+        return hub.child
+
+    def _propagate_exemplars(self, hub, context):
+        if hub.input_exs_obj.sender.ID == hub.child.ID:
+            # передаем эти эхземпляры родителю, не создавая новых ростков
+            exemplars_for_parent = remap_exemplars_old_to_new(hub.map, hub.input_exs_obj.exemplars)
+            hub.parent.set_input_exemplars(sender=hub, exemplars=exemplars_for_parent)
+            return self.parent
+        # пришло не от того, откуда ждали - прокладываем по каркасу новый кусок ростка:
+        or_rw_hub = deepcopy(hub)
+        or_rw_hub.ID = context.get_id()
+        or_rw_hub.child = hub.input_exs_obj.sender
+        return or_rw_hub
 
