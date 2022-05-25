@@ -265,26 +265,6 @@ def _create_or_rw_hubs(signa, parent, SUPER_ID, condition):
     return or_rw_hubs
 
 
-class Grower:
-    def __init__(self, condition):
-        self.active_buds=[]
-        self.root_hub = RootHub(condition)
-        self.current_hub = self.root_hub
-
-
-    def grow(self):
-        while True:
-            preffered_hub = self.current_hub.run()
-            if self.root_hub.result_exemplars is not None:
-                return self.root_hub.result_exemplars  # получили экземпляры на корневом узле, это успех! Выходим.
-            if preffered_hub is not None:
-                self.current_hub = preffered_hub
-            else:
-                if len(self.active_or_hubs) > 0:
-                    self.current_hub = self.active_or_hubs.pop()
-                else:
-                    return [] # все возможности кончились, возвращаем неудачу
-
 
 
 
