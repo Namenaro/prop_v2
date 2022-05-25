@@ -5,7 +5,7 @@ from hub import *
 
 class Context:
     def __init__(self):
-        self.id = 0
+        self.id = -1
         self.pic = get_numbers_of_type(3)[0]
         self.ltm = LongTermMemory()
         self.buds = []
@@ -19,10 +19,7 @@ class Context:
         return self.buds.pop()
 
     def get_id(self):
-        if self.id == 0:
-            return 0
-        else:
-            self.id += 1
+        self.id += 1
         return self.id
 
     def create_hub_by_condition(self, parent, SUPER_ID, condition):

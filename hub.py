@@ -35,6 +35,11 @@ class IHub(Hub):
     def __init__(self, signa, parent, condition, ID, SUPER_ID):
         Hub.__init__(self, signa, parent, condition, ID, SUPER_ID)
 
+    def print(self):
+        info = "IHub: id=" + str(self.ID) + ", super_id=" + str(self.SUPER_ID) + "; "
+        print (info)
+
+
 
 class AndHub(Hub):
     def __init__(self, signa, parent, condition, ID, SUPER_ID, LEFT_SUPER_ID, RIGHT_SUPER_ID):
@@ -52,6 +57,22 @@ class AndHub(Hub):
 
         self.input_exs_obj = None
 
+    def print(self):
+        info = "AndHub: id="+ str(self.ID) +", super_id="+str(self.SUPER_ID)+", "
+        if self.child_left is None:
+            info+=" NO left,"
+        else:
+            info+="leftID="+ str(self.child_left.ID) +", "
+        if self.child_right is None:
+            info += " NO right,"
+        else:
+            info+="rightID="+ str(self.child_right.ID) + ","
+        if self.input_exs_obj is None:
+            info+=" NO input"
+        else:
+            info+="input from child "+ str(self.input_exs_obj.sender.ID)
+        print (info)
+
 
     def set_input_exemplars(self, sender, exemplars):
         self.input_exs_obj = InputExemplars(sender, exemplars)
@@ -64,6 +85,18 @@ class OrRwHub(Hub):
         self.child = None
 
         self.input_exs_obj = None
+
+    def print(self):
+        info = "OrRwHub: id=" + str(self.ID) + ", super_id=" + str(self.SUPER_ID) + ", "
+        if self.child is None:
+            info += " NO child,"
+        else:
+            info+="childID="+ str(self.child.ID) + ","
+        if self.input_exs_obj is None:
+            info+=" NO input"
+        else:
+            info+="input from child "+ str(self.input_exs_obj.sender.ID)
+        print (info)
 
     def set_input_exemplars(self, sender, exemplars):
         self.input_exs_obj = InputExemplars(sender, exemplars)

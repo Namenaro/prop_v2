@@ -121,6 +121,7 @@ class AndHubRunner:
             return new_and_hub
 
     def _propagate_exemplars_from_left(self, hub, context):
+        hub.print()
         # 1) продолжается старый росток (т.е.в И-узел снизу зашел
         # тот же росток, что когда-то его создал, идя сверху)
         if hub.input_exs_obj.sender.ID == hub.child_left.ID:
@@ -161,7 +162,7 @@ class AndHubRunner:
         left_points = hub.signa.get_left_cloud_by_right_cloud(right_points)
         new_left_eid = hub.signa.get_new_eid_left()
         condition = Condition(new_left_eid, list(left_points))
-        child = context.create_hub(parent=hub,
+        child = context.create_hub_by_condition(parent=hub,
                                    SUPER_ID=hub.child_left_SUPER_ID,
                                    condition=condition)
         return child
