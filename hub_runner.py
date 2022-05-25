@@ -24,7 +24,6 @@ class HubRunner:
 class RootHubRunner:
     def run(self, hub, context):
         hub.child = context.create_hub_by_condition(parent=hub,
-                                                    ID=context.get_id(),
                                                     SUPER_ID=context.get_id(),
                                                     condition=hub.condition)
         return hub.child
@@ -42,7 +41,7 @@ class IHubRunner:
 class AndHubRunner:
     def run(self, hub, context):
         # 1) В узел заходит условие
-        if self.input_exs_obj is None:
+        if hub.input_exs_obj is None:
             next_hub = self._propagate_condition(hub, context)
             return next_hub
         # 2) в узел пришли экземпляры от ребенка
@@ -57,7 +56,7 @@ class AndHubRunner:
             hub.child_left = context.create_hub_by_condition(parent=hub,
                                                              SUPER_ID=hub.child_left_SUPER_ID,
                                                              condition=hub.condition)
-            return self.child_left
+            return hub.child_left
         # надо правого
         hub.main_conditioning_child_is_left = False
         hub.child_right = context.create_hub_by_condition(parent=hub,
@@ -181,9 +180,9 @@ class OrRwHubRunner:
 
     def _propagate_condition(self, hub, context):
         # передаем это условие ребенку
-        old_eid= hub.map(hub.condition.eid)
+        old_eid= hub.map[hub.condition.eid]
         condition_for_child = Condition(old_eid, points=deepcopy(hub.condition.points))
-        hub.child = context.create_hub(parent=hub, SUPER_ID=None,
+        hub.child = context.create_hub_by_condition(parent=hub, SUPER_ID=None,
                                         condition=condition_for_child)
         return hub.child
 

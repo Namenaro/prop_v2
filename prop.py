@@ -3,6 +3,7 @@ from hub_runner import HubRunner
 from hub import *
 
 def get_exemplars_by_condition(eid, points):
+    print ("try fit condition...")
     context = Context()
     runner = HubRunner()
     root_hub = RootHub(Condition(eid, points))

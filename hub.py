@@ -23,7 +23,7 @@ class Hub:
 
 class RootHub:
     def __init__(self, condition):
-        Hub.__init__(None, None, None, None, None)
+        Hub.__init__(self, signa=None, parent=None, condition=None, ID=None, SUPER_ID=None)
         self.input_exs_obj = None
         self.condition = condition
 
@@ -38,7 +38,7 @@ class IHub(Hub):
 
 class AndHub(Hub):
     def __init__(self, signa, parent, condition, ID, SUPER_ID, LEFT_SUPER_ID, RIGHT_SUPER_ID):
-        Hub.__init__(signa, parent, condition, ID, SUPER_ID)
+        Hub.__init__(self, signa, parent, condition, ID, SUPER_ID)
         self.child_left = None
         self.child_left_SUPER_ID =  LEFT_SUPER_ID
         self.child_left_exemplars = None
@@ -58,8 +58,8 @@ class AndHub(Hub):
 
 
 class OrRwHub(Hub):
-    def __init__(self, alternative_num,  signa, parent, condition, SUPER_ID):
-        Hub.__init__(signa, parent, condition, SUPER_ID)
+    def __init__(self, alternative_num,  signa, parent, condition, ID, SUPER_ID):
+        Hub.__init__(self, signa, parent, condition, ID, SUPER_ID)
         self.map = signa.alternatives_list[alternative_num] #  {eid1: eid1v1, eid2:eid2v1,...}
         self.child = None
 

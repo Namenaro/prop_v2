@@ -42,7 +42,7 @@ class Context:
             else:
                 if type(signa) == ORSignature:
                     or_rw_hubs = self._create_or_rw_hubs(signa, parent,
-                                                         condition, ID,
+                                                         condition,
                                                          SUPER_ID=SUPER_ID)
                     new_hub = or_rw_hubs.pop()
                     self.add_buds(or_rw_hubs)
