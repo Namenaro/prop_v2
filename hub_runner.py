@@ -26,6 +26,15 @@ class RootHubRunner:
                                        condition=hub.condition)
         return hub.child
 
+class IHubRunner:
+    def run(self, hub, context):
+        survived_points = hub.signa.run(hub.condition.points, context.pic)
+        if len(survived_points) == 0:
+            return None
+        exemplars = points_to_exemplars(hub.signa.new_eid, survived_points)
+        hub.parent.set_input_exemplars(exemplars=exemplars, sender=hub)
+        return hub.parent
+
 class AndHubRunner:
     def run(self, hub, context):
         pass
@@ -34,6 +43,3 @@ class OrHubRunner:
     def run(self, hub, context):
         pass
 
-class IHubRunner:
-    def run(self, hub, context):
-        pass
