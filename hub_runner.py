@@ -14,13 +14,17 @@ class HubRunner:
             return self.and_hub_runner.run(hub, context)
         if type(hub)==OrHub:
             return self.or_hub_runner.run(hub, context)
-        if type(hub)==RootHub:
+        if type(hub) == RootHub:
             return self.root_hub_runner.run(hub, context)
         assert False, "prop err: unknown type of hub"
 
-class IHubRunner:
+class RootHubRunner:
     def run(self, hub, context):
-        pass
+        hub.child = context.create_hub(parent=hub,
+                                       ID=context.get_id(),
+                                       SUPER_ID=context.get_id(),
+                                       condition=hub.condition)
+        return hub.child
 
 class AndHubRunner:
     def run(self, hub, context):
@@ -30,6 +34,6 @@ class OrHubRunner:
     def run(self, hub, context):
         pass
 
-class RootHubRunner:
+class IHubRunner:
     def run(self, hub, context):
         pass
