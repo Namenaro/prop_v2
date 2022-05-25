@@ -30,6 +30,7 @@ class RootHubRunner:
 
 class IHubRunner:
     def run(self, hub, context):
+        print ("i-hub runned")
         survived_points = hub.signa.run(hub.condition.points, context.pic)
         if len(survived_points) == 0:
             return None
@@ -52,26 +53,35 @@ class AndHubRunner:
         assert hub.child_left is None and hub.child_right is None, "prop err: child of and-hub must not exist! but exists"
         # смотрим, какого ребенка надо создать, создаем его и передаем ему управление
         if hub.condition.eid in hub.signa.map1.keys():  # надо левого
+            print ("and-hub creates left, left is main child")
             hub.main_conditioning_child_is_left = True
+            condition_for_child = Condition(eid=hub.signa.map1[hub.condition.eid],
+                                            points=deepcopy(hub.condition.points))
+
             hub.child_left = context.create_hub_by_condition(parent=hub,
                                                              SUPER_ID=hub.child_left_SUPER_ID,
-                                                             condition=hub.condition)
+                                                             condition=condition_for_child)
+
             return hub.child_left
         # надо правого
+
+        print("and-hub creates right, right is main child")
         hub.main_conditioning_child_is_left = False
+        condition_for_child = Condition(eid=hub.signa.map2[hub.condition.eid],
+                                        points=deepcopy(hub.condition.points))
         hub.child_right = context.create_hub_by_condition(parent=hub,
                                                            SUPER_ID=hub.child_right_SUPER_ID,
-                                                           condition=hub.condition)
+                                                           condition=condition_for_child)
         return hub.child_right
 
     def _propagate_exemplars(self, hub, context):
         #  В узел пришли экземпляры (положились в  self.input_exs_obj).
         #  Они могли придти справа или слева.
         if hub.input_exs_obj.sender.SUPER_ID == hub.child_left_SUPER_ID:
-            next_hub = hub._propagate_exemplars_from_left(hub, context)
+            next_hub = self._propagate_exemplars_from_left(hub, context)
             return next_hub
-        assert hub.input_exs_obj.sender.SUPER_ID == self.child_right.SUPER_ID, "prop err: super_id of child wrong"
-        next_hub = hub._propagate_exemplars_from_right(hub, context)
+        assert hub.input_exs_obj.sender.SUPER_ID == hub.child_right.SUPER_ID, "prop err: super_id of child wrong"
+        next_hub = self._propagate_exemplars_from_right(hub, context)
         return next_hub
 
     def _propagate_exemplars_from_right(self, hub, context):
@@ -161,7 +171,7 @@ class AndHubRunner:
         right_points = hub.signa.get_right_cloud_by_left_cloud(left_points)
         new_right_eid = hub.signa.get_new_eid_right()
         condition = Condition(new_right_eid, list(right_points))
-        child = context.create_hub(parent=hub,
+        child = context.create_hub_by_condition(parent=hub,
                                    SUPER_ID=hub.child_right_SUPER_ID,
                                    condition=condition)
         return child

@@ -16,6 +16,7 @@ def get_exemplars_by_condition(eid, points):
         if preffered_hub is not None:
             current_hub = preffered_hub
         else:
+            print("switch bud..")
             current_hub = context.get_next_bud()
             if current_hub is None:
                 return [] # все возможности кончились, возвращаем неудачу

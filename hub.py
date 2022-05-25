@@ -33,7 +33,7 @@ class RootHub:
 
 class IHub(Hub):
     def __init__(self, signa, parent, condition, ID, SUPER_ID):
-        Hub.__init__(signa, parent, condition, ID, SUPER_ID)
+        Hub.__init__(self, signa, parent, condition, ID, SUPER_ID)
 
 
 class AndHub(Hub):
