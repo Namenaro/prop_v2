@@ -35,7 +35,14 @@ class Context:
                 new_hub = IHub(signa, parent, condition, ID, SUPER_ID=SUPER_ID)
             else:
                 if type(signa) == ORSignature:
-                    or_rw_hubs = _create_or_rw_hubs(signa, parent, condition, SUPER_ID=SUPER_ID)
+                    or_rw_hubs = self._create_or_rw_hubs(signa, parent, condition, SUPER_ID=SUPER_ID)
                     new_hub = or_rw_hubs.pop()
                     self.add_buds(or_rw_hubs)
         return new_hub
+
+    def _create_or_rw_hubs(self, signa, parent, condition, SUPER_ID):
+        or_rw_hubs = []
+        for i in range(len(signa.alternatives_list)):
+            new_or_rw_hub = OrRwHub(i, signa, parent, condition, SUPER_ID)
+            or_rw_hubs.append(new_or_rw_hub)
+        return or_rw_hubs

@@ -257,12 +257,6 @@ class OrRwHub(Hub):
         return or_rw_hub
 
 
-def _create_or_rw_hubs(signa, parent, SUPER_ID, condition):
-    or_rw_hubs = []
-    for i in range(len(signa.alternatives_list)):
-        new_or_rw_hub = OrRwHub(i,  signa, parent, condition, SUPER_ID)
-        or_rw_hubs.append(new_or_rw_hub)
-    return or_rw_hubs
 
 
 
