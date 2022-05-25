@@ -36,7 +36,12 @@ class IHub(Hub):
         Hub.__init__(self, signa, parent, condition, ID, SUPER_ID)
 
     def print(self):
-        info = "IHub: id=" + str(self.ID) + ", super_id=" + str(self.SUPER_ID) + "; "
+        info = "IHub: id=" + str(self.ID) + ", super_id=" + str(self.SUPER_ID) + ", "
+        if type(self.parent)==RootHub:
+            info+="parent[ROOT]"
+        else:
+            info += ", parent[ID= " + str(self.parent.ID)+ ", SUPER_ID="+ str(self.parent.SUPER_ID)
+            info += "]; "
         print (info)
 
 
@@ -71,6 +76,11 @@ class AndHub(Hub):
             info+=" NO input"
         else:
             info+="input from child "+ str(self.input_exs_obj.sender.ID)
+        if type(self.parent) == RootHub:
+            info += ", parent[ROOT]"
+        else:
+            info += ", parent[ID= " + str(self.parent.ID) + ", SUPER_ID=" + str(self.parent.SUPER_ID)
+            info += "]; "
         print (info)
 
 
@@ -95,7 +105,12 @@ class OrRwHub(Hub):
         if self.input_exs_obj is None:
             info+=" NO input"
         else:
-            info+="input from child "+ str(self.input_exs_obj.sender.ID)
+            info+="input from child "+ str(self.input_exs_obj.sender.ID)+", "
+        if type(self.parent) == RootHub:
+            info += "parent[ROOT]"
+        else:
+            info += ", parent[ID= " + str(self.parent.ID) + ", SUPER_ID=" + str(self.parent.SUPER_ID)
+            info += "]; "
         print (info)
 
     def set_input_exemplars(self, sender, exemplars):

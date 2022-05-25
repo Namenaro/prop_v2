@@ -24,20 +24,24 @@ class Context:
 
     def create_hub_by_condition(self, parent, SUPER_ID, condition):
         signa = self.ltm.get_program_signature_by_eid(eid=condition.eid)
-        ID = self.get_id()
         if type(signa) == ISignature:
+            print("IHub created by condition")
             new_hub = IHub(signa, parent,
-                           condition, ID,
+                           condition,
+                           ID=self.get_id(),
                            SUPER_ID=SUPER_ID)
         else:
             if type(signa) == AndSignature:
+                print("AndHub created by condition")
                 new_hub = AndHub(signa, parent,
-                                 condition, ID,
+                                 condition,
+                                 ID=self.get_id(),
                                  SUPER_ID=SUPER_ID,
                                  LEFT_SUPER_ID=self.get_id(),
                                  RIGHT_SUPER_ID=self.get_id())
             else:
                 if type(signa) == ORSignature:
+                    print("OrHub created by condition")
                     or_rw_hubs = self._create_or_rw_hubs(signa, parent,
                                                          condition,
                                                          SUPER_ID=SUPER_ID)

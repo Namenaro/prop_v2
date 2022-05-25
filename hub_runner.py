@@ -30,17 +30,19 @@ class RootHubRunner:
 
 class IHubRunner:
     def run(self, hub, context):
-        print ("i-hub runned")
         survived_points = hub.signa.run(hub.condition.points, context.pic)
         if len(survived_points) == 0:
             return None
         exemplars = points_to_exemplars(hub.signa.new_eid, survived_points)
+        hub.print()
+        print("i-hub returns exemplars:" + str(len(exemplars)))
         hub.parent.set_input_exemplars(exemplars=exemplars, sender=hub)
         return hub.parent
 
 
 class AndHubRunner:
     def run(self, hub, context):
+        hub.print()
         # 1) В узел заходит условие
         if hub.input_exs_obj is None:
             next_hub = self._propagate_condition(hub, context)
@@ -85,6 +87,7 @@ class AndHubRunner:
         return next_hub
 
     def _propagate_exemplars_from_right(self, hub, context):
+        print("exemplars to and-hub from right..")
         #  1) продолжается старый росток (т.е.в И-узел снизу зашел тот же росток,
         #  что когда-то его создал, идя сверху)
         if hub.input_exs_obj.sender.ID == hub.child_right.ID:
@@ -121,7 +124,7 @@ class AndHubRunner:
             return new_and_hub
 
     def _propagate_exemplars_from_left(self, hub, context):
-        hub.print()
+        print("exemplars to and-hub from left..")
         # 1) продолжается старый росток (т.е.в И-узел снизу зашел
         # тот же росток, что когда-то его создал, идя сверху)
         if hub.input_exs_obj.sender.ID == hub.child_left.ID:
@@ -180,6 +183,7 @@ class AndHubRunner:
 
 class OrRwHubRunner:
     def run(self, hub, context):
+        hub.print()
         # разные варианты прохождения активности по узлу:
         # 1) В узел заходит активирующее его условие
         if hub.input_exs_obj is None:
@@ -191,9 +195,9 @@ class OrRwHubRunner:
 
     def _propagate_condition(self, hub, context):
         # передаем это условие ребенку
-        old_eid= hub.map[hub.condition.eid]
+        old_eid = hub.map[hub.condition.eid]
         condition_for_child = Condition(old_eid, points=deepcopy(hub.condition.points))
-        hub.child = context.create_hub_by_condition(parent=hub, SUPER_ID=None,
+        hub.child = context.create_hub_by_condition(parent=hub, SUPER_ID=context.get_id(),
                                         condition=condition_for_child)
         return hub.child
 
