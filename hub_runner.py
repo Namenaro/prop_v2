@@ -52,13 +52,15 @@ class AndHubRunner:
         if hub.condition.eid in hub.signa.map1.keys():  # надо левого
             hub.main_conditioning_child_is_left = True
             hub.child_left = context.create_hub_by_condition(parent=hub,
-                                                             SUPER_ID=self.child_left_SUPER_ID,
+                                                             SUPER_ID=hub.child_left_SUPER_ID,
                                                              condition=hub.condition)
             return self.child_left
         # надо правого
-        self.main_conditioning_child_is_left = False
-        self.child_right = _create_hub(parent=self, SUPER_ID=self.child_right_SUPER_ID, condition=self.condition)
-        return self.child_right
+        hub.main_conditioning_child_is_left = False
+        hub.child_right = context.create_hub_by_condition(parent=hub,
+                                                           SUPER_ID=hub.child_right_SUPER_ID,
+                                                           condition=hub.condition)
+        return hub.child_right
 
 
 
