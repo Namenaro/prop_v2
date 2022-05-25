@@ -62,6 +62,16 @@ class AndHubRunner:
                                                            condition=hub.condition)
         return hub.child_right
 
+    def _propagate_exemplars(self, hub, context):
+        #  В узел пришли экземпляры (положились в  self.input_exs_obj).
+        #  Они могли придти справа или слева.
+        if hub.input_exs_obj.sender.SUPER_ID == hub.child_left_SUPER_ID:
+            next_hub = hub._propagate_exemplars_from_left(context)
+            return next_hub
+        assert hub.input_exs_obj.sender.SUPER_ID == self.child_right.SUPER_ID, "prop err: super_id of child wrong"
+        next_hub = hub._propagate_exemplars_from_right(context)
+        return next_hub
+
 
 
 class OrHubRunner:
