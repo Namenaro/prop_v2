@@ -108,6 +108,42 @@ class AndHubRunner:
                 new_and_hub.child_left_exemplars = None
             return new_and_hub
 
+    def _propagate_exemplars_from_left(self, hub, context):
+        # 1) продолжается старый росток (т.е.в И-узел снизу зашел
+        # тот же росток, что когда-то его создал, идя сверху)
+        if hub.input_exs_obj.sender.ID == hub.child_left.ID:
+            hub.child_left_exemplars=deepcopy(hub.input_exs_obj.exemplars)
+            if hub.child_right_exemplars is not None: # все есть для попытки запуска себя!
+                assert hub.main_conditioning_child_is_left is False, "prop err: main child must be right"
+                exemplars = hub.signa.run(left_pre_exemplars=hub.child_left_exemplars,
+                                           right_pre_exemplars=hub.child_right_exemplars)
+                if exemplars is None:
+                    return None  # провал на узле (росток умер)
+                hub.parent.set_input_exemplars(exemplars=exemplars, sender=hub)
+                return hub.parent
+            else: # запуск себя невозможен ввиду отсуствия экземпляров справа
+                # чтоб их (когда-нибудь) получить, создаем правого ребенка и передаем ему управление
+                assert hub.main_conditioning_child_is_left is True, "prop err: main child must be left"
+                hub.child_right = self._create_right_child_by_left_exemplars(hub, context)
+                del hub.input_exs_obj
+                hub.input_exs_obj = None
+                return hub.child_right
+        else:
+        # 2) в узел зашел какой-то новый росток, и нужно продоложить
+        # его участок по каркасу этого И-узла
+            # пересоздаем И у-зел----------------------------------------------
+            new_and_hub = deepcopy(hub)
+            new_and_hub.ID = context.get_id()
+            # настраиваем левого ребенка--------------------------------------
+            new_and_hub.child_left = hub.input_exs_obj.sender
+            # настраиваем правого ребенка--------------------------------------
+            # если  новый росток зашел из главного ребенка, то
+            # ведомый ребенок должен быть в этом ростке перечсчитан:
+            if hub.main_conditioning_child_is_left is True:
+                new_and_hub.child_right = None
+                new_and_hub.child_right_exemplars = None
+            return new_and_hub
+
     def _create_left_child_by_right_exemplars(self, hub, context):
         right_points = extract_cloud_from_exemplars_list_by_eid(hub.signa.pre_eid_right, hub.child_right_exemplars)
         left_points = hub.signa.get_left_cloud_by_right_cloud(right_points)
@@ -124,7 +160,7 @@ class AndHubRunner:
         new_right_eid = hub.signa.get_new_eid_right()
         condition = Condition(new_right_eid, list(right_points))
         child = context.create_hub(parent=hub,
-                                   SUPER_ID=self.child_right_SUPER_ID,
+                                   SUPER_ID=hub.child_right_SUPER_ID,
                                    condition=condition)
         return child
 
