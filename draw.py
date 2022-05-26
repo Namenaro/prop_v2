@@ -24,9 +24,10 @@ def draw_exemplar_to_ax(exemplar, ax):
         x_values = [prev_point.x, next_point.x]
         y_values = [prev_point.y, next_point.y]
         ax.plot(x_values, y_values, linestyle="--")
+        prev_point = next_point
 
 
-def draw_exeplars_to_html(pic, exemplars, name, one_ax=False):
+def draw_exeplars_to_html(pic, exemplars, name, one_ax=True):
     logger = HtmlLogger(name)
     if one_ax:
         fig, ax = plt.subplots()
@@ -34,10 +35,12 @@ def draw_exeplars_to_html(pic, exemplars, name, one_ax=False):
         for exemplar in exemplars:
             draw_exemplar_to_ax(exemplar, ax)
     else:
+        MAX=20
         num_axs = len(exemplars)
+        logger.add_text("num_exemplars = " + str(len(exemplars)))
         num_cols = 3
-        num_rows = math.ceil(num_axs/num_cols)
-        fig, axs = plt.subplots(nrows=num_rows, ncols=num_cols, sharex=True, sharey=True)
+        num_rows = min(math.ceil(num_axs/num_cols), math.ceil(MAX/num_cols))
+        fig, axs = plt.subplots(figsize=(5*num_cols,5*num_rows), nrows=num_rows, ncols=num_cols, sharex=True, sharey=True)
         i=0
         for row in axs:
             for col in row:

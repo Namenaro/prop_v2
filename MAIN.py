@@ -23,13 +23,13 @@ def show_hardcoded_examples():
 
 def exp():
     #show_hardcoded_examples()
-    #points = [Point(13, 15), Point(14, 15)] # for eid=2 (Simple AND)
-    #points = [Point(13, 15), Point(14, 15)] # for eid=6 (2 AND conneced by AND )
-    points = [Point(14, 22), Point(12, 22)]# for eid=19 (OR between 2 ANDs)
+    #points = [Point(13, 15)] # for eid=2 (Simple AND)
+    points = [Point(13, 15), Point(14, 15)] # for eid=6 (2 AND conneced by AND )
+    #points = [Point(14, 22), Point(12, 22)]# for eid=19 (OR between 2 ANDs)
     #points = [Point(0, 0), Point(1, 0)]# for eid=19 (fail)
-    exemplars = get_exemplars_by_condition(eid=19, points=points)
+    exemplars = get_exemplars_by_condition(eid=6, points=points)
     print("Result exemplars are " + str(exemplars))
-    draw_exeplars_to_html(pic=get_numbers_of_type(3)[0], exemplars=exemplars, name="result")
+    draw_exeplars_to_html(pic=get_numbers_of_type(3)[0], exemplars=exemplars, name="result",one_ax=False)
 
 exp()
 
