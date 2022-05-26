@@ -1,6 +1,7 @@
 from utils.get_pictures import *
 from utils.point import Point
 from prop import get_exemplars_by_condition
+from draw import draw_exeplars_to_html
 import matplotlib.pyplot as plt
 
 
@@ -28,6 +29,7 @@ def exp():
     #points = [Point(0, 0), Point(1, 0)]# for eid=19 (fail)
     exemplars = get_exemplars_by_condition(eid=19, points=points)
     print("Result exemplars are " + str(exemplars))
+    draw_exeplars_to_html(pic=get_numbers_of_type(3)[0], exemplars=exemplars, name="result")
 
 exp()
 
