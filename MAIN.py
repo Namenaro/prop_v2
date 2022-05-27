@@ -30,7 +30,7 @@ def exp1(): # test directed prop
     pic = get_numbers_of_type(3)[0]
     ltm = LongTermMemory()
     cog_map = CognitiveMap()
-    context = Context(cog_map,ltm,pic)
+    context = Context(cog_map, ltm, pic)
     #points = [Point(13, 15)] # for eid=2 (Simple AND)
     points = [Point(13, 15), Point(14, 15)] # for eid=6 (2 AND conneced by AND )
     #points = [Point(14, 22), Point(12, 22)]# for eid=19 (OR between 2 ANDs)
