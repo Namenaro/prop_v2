@@ -6,10 +6,10 @@ import math
 
 class EidsInPoint:
     def __init__(self):
-        self.eids=[]
+        self.eids=set()
 
     def add_eid(self, eid):
-        self.eids.append(eid)
+        self.eids.add(eid)
 
     def contains_eid(self, eid):
         return eid in self.eids
