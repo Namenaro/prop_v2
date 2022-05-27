@@ -4,11 +4,12 @@ from signatures import AndSignature, ORSignature, ISignature
 from hub import *
 
 class Context:
-    def __init__(self):
+    def __init__(self, cog_map, ltm, pic):
         self.id = -1
-        self.pic = get_numbers_of_type(3)[0]
-        self.ltm = LongTermMemory()
+        self.pic = pic
+        self.ltm = ltm
         self.buds = []
+        self.cog_map = cog_map
 
     def add_buds(self, buds):
         self.buds = self.buds + buds

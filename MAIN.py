@@ -2,6 +2,9 @@ from utils.get_pictures import *
 from utils.point import Point
 from prop import get_exemplars_by_condition
 from draw import draw_exeplars_to_html
+from prop_context import Context
+from long_term_memory import LongTermMemory
+from cognitive_map import CognitiveMap
 import matplotlib.pyplot as plt
 
 
@@ -23,13 +26,18 @@ def show_hardcoded_examples():
 
 def exp():
     #show_hardcoded_examples()
-    #points = [Point(13, 15)] # for eid=2 (Simple AND)
-    points = [Point(13, 15), Point(14, 15)] # for eid=6 (2 AND conneced by AND )
+    pic = get_numbers_of_type(3)[0]
+    ltm = LongTermMemory()
+    cog_map = CognitiveMap()
+    context = Context(cog_map,ltm,pic)
+    points = [Point(13, 15)] # for eid=2 (Simple AND)
+    #points = [Point(13, 15), Point(14, 15)] # for eid=6 (2 AND conneced by AND )
     #points = [Point(14, 22), Point(12, 22)]# for eid=19 (OR between 2 ANDs)
     #points = [Point(0, 0), Point(1, 0)]# for eid=19 (fail)
-    exemplars = get_exemplars_by_condition(eid=6, points=points)
+    exemplars = get_exemplars_by_condition(eid=2, points=points, context=context)
     print("Result exemplars are " + str(exemplars))
-    draw_exeplars_to_html(pic=get_numbers_of_type(3)[0], exemplars=exemplars, name="result",one_ax=False)
+    draw_exeplars_to_html(pic=pic, exemplars=exemplars, name="result",one_ax=False)
+    cog_map.draw(pic)
 
 exp()
 

@@ -1,7 +1,7 @@
 from hub import *
 
 from copy import  deepcopy
-
+from cognitive_map import CognitiveMap
 
 class HubRunner:
     def __init__(self):
@@ -37,6 +37,7 @@ class IHubRunner:
         hub.print()
         print("i-hub returns exemplars:" + str(len(exemplars)))
         hub.parent.set_input_exemplars(exemplars=exemplars, sender=hub)
+        context.cog_map.add_prog_exemplars(exemplars)
         return hub.parent
 
 

@@ -13,9 +13,11 @@ def plot_points_arrays_as_numbers(points_arrays, pic):
             i+=1
     return fig
 
-def plot_points_array(ps, pic):
+def plot_points_array(ps, pic, marker=None):
+    if marker is None:
+        marker='P'
     fig, ax = plt.subplots()
     plt.imshow(pic, cmap='gray_r')
     for point in ps:
-        ax.plot(point.x, point.y, marker='P', markerfacecolor='blue', markersize=12, color='skyblue', linewidth=4)
+        ax.plot(point.x, point.y, marker=marker, markerfacecolor='blue', markersize=12, color='skyblue', linewidth=4)
     return fig
