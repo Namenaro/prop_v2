@@ -102,6 +102,7 @@ class AndHubRunner:
                 if exemplars is None:
                     return None  # провал на узле (росток умер)
                 hub.parent.set_input_exemplars(exemplars=exemplars, sender=hub)
+                context.cog_map.add_prog_exemplars(exemplars)
                 return hub.parent
             else: # запуск себя невозможен ввиду отсуствия экземпляров слева
                 # чтоб их (когда-нибудь) получить, создаем левого ребенка и передаем ему управление
@@ -139,6 +140,7 @@ class AndHubRunner:
                 if exemplars is None:
                     return None  # провал на узле (росток умер)
                 hub.parent.set_input_exemplars(exemplars=exemplars, sender=hub)
+                context.cog_map.add_prog_exemplars(exemplars)
                 return hub.parent
             else: # запуск себя невозможен ввиду отсуствия экземпляров справа
                 # чтоб их (когда-нибудь) получить, создаем правого ребенка и передаем ему управление
@@ -207,6 +209,7 @@ class OrRwHubRunner:
             # передаем эти эхземпляры родителю, не создавая новых ростков
             exemplars_for_parent = remap_exemplars_old_to_new(hub.map, hub.input_exs_obj.exemplars)
             hub.parent.set_input_exemplars(sender=hub, exemplars=exemplars_for_parent)
+            context.cog_map.add_prog_exemplars(exemplars_for_parent)
             return hub.parent
         # пришло не от того, откуда ждали - прокладываем по каркасу новый кусок ростка:
         or_rw_hub = deepcopy(hub)
