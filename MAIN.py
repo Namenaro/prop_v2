@@ -5,6 +5,7 @@ from draw import draw_exeplars_to_html
 from prop_context import Context
 from long_term_memory import LongTermMemory
 from cognitive_map import CognitiveMap
+from undirected_prop import undirected_prop_from_point
 import matplotlib.pyplot as plt
 
 
@@ -24,7 +25,7 @@ def show_hardcoded_examples():
     greens = [img[22][14], img[20][16], img[18][18]]
     yellows = [img[21][14], img[18][17]]
 
-def exp():
+def exp1(): # test directed prop
     #show_hardcoded_examples()
     pic = get_numbers_of_type(3)[0]
     ltm = LongTermMemory()
@@ -39,6 +40,16 @@ def exp():
     draw_exeplars_to_html(pic=pic, exemplars=exemplars, name="result",one_ax=False)
     cog_map.draw(pic)
 
-exp()
+def exp2():# test undirected prop
+    pic = get_numbers_of_type(3)[0]
+    ltm = LongTermMemory()
+    cog_map = CognitiveMap()
+    context = Context(cog_map, ltm, pic)
+    point = Point(13, 15)
+    undirected_prop_from_point(point, context)
+    cog_map.draw(pic)
+
+#exp1()
+exp2()
 
 
